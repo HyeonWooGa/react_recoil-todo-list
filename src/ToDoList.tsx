@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
+interface IForm {
+  toDo: string;
+}
+
 function ToDoList() {
-  const { register, handleSubmit, formState } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IForm>();
   const onValid = (data: any) => {
     console.log(data);
   };
-  console.log(formState.errors);
   return (
     <div>
       <form onSubmit={handleSubmit(onValid)}>
@@ -16,10 +23,15 @@ function ToDoList() {
               value: 10,
               message: "too short",
             },
+            pattern: {
+              value: /^[ㄱ-ㅎㅏ-ㅣ가-힣0-9]/,
+              message: "only korean & numbers",
+            },
           })}
           placeholder="Write a to do"
         />
         <button>Add</button>
+        <span>{errors?.toDo?.message}</span>
       </form>
     </div>
   );

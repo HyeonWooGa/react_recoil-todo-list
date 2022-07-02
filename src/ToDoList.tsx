@@ -10,8 +10,16 @@ function ToDoList() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<IForm>();
-  const onValid = (data: any) => {
+  const onValid = (data: IForm) => {
+    if (data.toDo.includes("게임")) {
+      setError(
+        "toDo",
+        { message: "게임을 하면 안됩니다." },
+        { shouldFocus: true }
+      );
+    }
     console.log(data);
   };
   return (
@@ -26,6 +34,10 @@ function ToDoList() {
             pattern: {
               value: /^[ㄱ-ㅎㅏ-ㅣ가-힣0-9]/,
               message: "only korean & numbers",
+            },
+            validate: {
+              noYoutube: (value) =>
+                value.includes("유튜브") ? "유튜브를 보면 안됩니다." : true,
             },
           })}
           placeholder="Write a to do"

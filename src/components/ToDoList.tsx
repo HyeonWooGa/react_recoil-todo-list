@@ -5,6 +5,7 @@ import ToDo from "./ToDo";
 
 function ToDoList() {
   const toDos = useRecoilValue(toDoState); // const [x, setX] = useState(); 와 거의 비슷
+  console.log(toDos);
   return (
     <div>
       <h1>To Dos</h1>

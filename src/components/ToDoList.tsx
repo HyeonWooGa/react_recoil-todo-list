@@ -1,29 +1,48 @@
-import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { atom, useRecoilState } from "recoil";
 
 interface IForm {
   toDo: string;
 }
 
+interface IToDo {
+  text: string;
+  id: number;
+  category: "TO_DO" | "DOING" | "DONE";
+}
+
+const toDoState = atom<IToDo[]>({
+  key: "toDo",
+  default: [],
+});
+
 function ToDoList() {
+  const [toDos, setToDos] = useRecoilState(toDoState); // const [x, setX] = useState(); 와 거의 비슷
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
+    setValue,
   } = useForm<IForm>();
-  const onValid = (data: IForm) => {
-    if (data.toDo.includes("게임")) {
+  const onValid = ({ toDo }: IForm) => {
+    if (toDo.includes("게임")) {
       setError(
         "toDo",
         { message: "게임을 하면 안됩니다." },
         { shouldFocus: true }
       );
     }
-    console.log(data);
+    setToDos((oldToDos) => [
+      { text: toDo, id: Date.now(), category: "TO_DO" },
+      ...oldToDos,
+    ]);
+    setValue("toDo", "");
   };
   return (
     <div>
+      <h1>To Dos</h1>
+      <hr />
       <form onSubmit={handleSubmit(onValid)}>
         <input
           {...register("toDo", {
@@ -45,6 +64,11 @@ function ToDoList() {
         <button>Add</button>
         <span>{errors?.toDo?.message}</span>
       </form>
+      <ul>
+        {toDos.map((toDo) => (
+          <li key={toDo.id}>{toDo.text}</li>
+        ))}
+      </ul>
     </div>
   );
 }

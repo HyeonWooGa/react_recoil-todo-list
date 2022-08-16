@@ -10,11 +10,7 @@ function ToDo({ text, category, id }: IToDo) {
     } = event;
     if (name === "delete") {
       setToDos((oldToDos) => {
-        const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
-        return [
-          ...oldToDos.slice(0, targetIndex),
-          ...oldToDos.slice(targetIndex + 1),
-        ];
+        return oldToDos.filter((toDo) => toDo.id !== id);
       });
     } else {
       setToDos((oldToDos) => {

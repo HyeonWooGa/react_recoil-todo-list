@@ -20,21 +20,27 @@ const localStorageEffect =
     });
   };
 
-export enum Categories {
+/* export enum Categories {
   "TO_DO" = "TO_DO",
   "DOING" = "DOING",
   "DONE" = "DONE",
-}
+} */
+
+export const CategoriesState = atom({
+  key: "categories",
+  default: ["TO_DO", "DOING", "DONE"],
+  effects: [localStorageEffect("categories")],
+});
 
 export interface IToDo {
   text: string;
   id: number;
-  category: Categories;
+  category: string;
 }
 
-export const categoryState = atom<Categories>({
+export const categoryState = atom({
   key: "category",
-  default: Categories.TO_DO,
+  default: "TO_DO",
 });
 
 export const toDoState = atom<IToDo[]>({
@@ -50,4 +56,9 @@ export const toDoSelector = selector({
     const category = get(categoryState);
     return toDos.filter((toDo) => toDo.category === category);
   },
+});
+
+export const newCategoryState = atom({
+  key: "newCategory",
+  default: "",
 });
